@@ -2,25 +2,25 @@
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 
-const livro = ref({});
+const livros = ref([]); 
 
-const buscarLivro = async () => {
+const buscarLivros = async () => { 
   try {
     const resposta = await axios.get('https://daarii-ni11-dev.fl0.io/livros');
-    livro.value = resposta.data[0]; // Ajuste aqui para acessar o primeiro livro da lista
+    livros.value = resposta.data; 
   } catch (erro) {
-    console.error('Erro ao buscar o livro:', erro);
+    console.error('Erro ao buscar os livros:', erro);
   }
 }
 
 onMounted(() => {
-  buscarLivro();
+  buscarLivros();
 });
 </script>
 
 <template>
   <div class="grid grid-cols-3 gap-4 mb-4 mt-5">
-    <div class="flex items-center justify-center h-30 rounded bg-gray-50 dark:bg-gray-800">
+    <div v-for="livro in livros" :key="livro.id" class="flex items-center justify-center h-30 rounded bg-gray-50 dark:bg-gray-800">
       <div class="card lg:card-side bg-base-100 shadow-xl">
         <figure class="w-56">
           <img :src="livro.capa" alt="Capa do Livro" />

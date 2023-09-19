@@ -40,7 +40,7 @@ import RegistroLivro from '../components/RegistroLivros.vue'
         <RegistroLivro />
       </div>
       <Card />
-      <Card />
+      
       
     </div>
   </div>
