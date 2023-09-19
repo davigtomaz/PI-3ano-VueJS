@@ -8,9 +8,7 @@ const buscarLivros = async () => {
   try {
     const resposta = await axios.get('https://daarii-ni11-dev.fl0.io/livros');
     livros.value = resposta.data; 
-  } catch (erro) {
-    console.error('Erro ao buscar os livros:', erro);
-  }
+  } 
 }
 
 onMounted(() => {
