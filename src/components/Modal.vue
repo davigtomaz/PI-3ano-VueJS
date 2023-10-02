@@ -6,7 +6,7 @@ defineProps({
 </script>
 
 <template>
-  <Transition name="modal">
+  <Transition name="modal" class="">
     <div v-if="visible" class="modal-mask">
       <div class="modal-container">
         <div class="modal-header">
@@ -41,7 +41,8 @@ defineProps({
 }
 
 .modal-container {
-  width: 300px;
+  width: 30%;
+  height: 80%;
   margin: auto;
   padding: 20px 30px;
   background-color: #fff;
