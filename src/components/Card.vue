@@ -19,18 +19,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="grid grid-cols-3 gap-4 mb-4 mt-5">
-    <div v-for="livro in livros" :key="livro.id" class="flex items-center justify-center h-30 rounded bg-gray-50 dark:bg-gray-800">
+  <div class="grid grid-cols-3 gap-1 mb-6 mt-7  w-full">
+    <div v-for="livro in livros" :key="livro.id" class="flex items-center justify-center ">
       <div class="card lg:card-side bg-base-100 shadow-xl">
-        <figure class="w-56">
+        <figure class="w-full h-full">
           <img :src="livro.capa" alt="Capa do Livro" />
         </figure>
-        <div class="card-body">
+        <div class="card-body mr-1">
           <h2 class="card-title">{{ livro.titulo || 'Título não disponível' }}</h2>
-          <p>Click the button to listen on Spotiwhy app.</p>
-          <div class="card-actions justify-end">
-            <button class="btn btn-primary">Listen</button>
-          </div>
+          <p>Categoria: {{ livro.categoria.join(',') }}</p>
+          <p>Autor(s): {{ livro.autores.join(',') }}</p>
+          <p>Localização: {{ livro.localizacao }}</p>    
         </div>
       </div>
     </div>
