@@ -24,8 +24,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="loading1">
     <Loading v-if="loading" />
+</div>
+  <div class="container">
+   
     <div
       class="card"
       :style="{ '--clr': cardColor }"
@@ -39,8 +42,11 @@ onMounted(() => {
         <div class="title-background">
           <h2>{{ livro.titulo }}</h2>
         </div>
-        <p>aaaa</p>
-        <a href="">Read More</a>
+        <p>Categoria: {{ livro.categoria.join(',') }}</p>
+          <p>Autor(s): {{ livro.autores.join(',') }}</p>
+          <p>Localização: {{ livro.localizacao }}</p>  
+          <p>Editora: {{ livro.editora }}</p>  
+       
       </div>
     </div>
   </div>
@@ -62,6 +68,14 @@ onMounted(() => {
     flex-wrap: wrap;
     gap: 110px 50px;
     padding: 50px 50px;
+}
+.loading1 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    
 }
 
 .container .card {
@@ -124,7 +138,7 @@ onMounted(() => {
 
 .container .card .content {
     position: absolute;
-    top: 252px;
+    top: 265px;
     width: 100%;
     height: 35px;
     padding: 0 30px;
@@ -134,12 +148,12 @@ onMounted(() => {
 }
 
 .container .card:hover .content {
-    top: 250px;
+    top: 240px;
     height: 250px;
 }
 
 .container .card .content h2 {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--clr);
   margin: 0;
@@ -149,16 +163,6 @@ onMounted(() => {
     color: #333;
 }
 
-.container .card .content a {
-    position: relative;
-    top: 15px;
-    display: inline-block;
-    padding: 12px 25px;
-    text-decoration: none;
-    background: var(--clr);
-    color: white;
-    font-weight: 500;
-}
 
 .container .card .content a:hover {
     opacity: 0.8;
@@ -166,7 +170,7 @@ onMounted(() => {
 
 @media (max-width: 480px) {
     .container .card {
-        width: 230px;
+        width: 240px;
         border-radius: 15px;
     }
 
