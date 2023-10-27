@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, } from 'vue'
+import { ref, reactive } from 'vue'
 import PlusBoxIcon from 'vue-material-design-icons/PlusBox.vue'
 
 import Card from '../components/Card.vue'
@@ -39,7 +39,6 @@ async function save() {
 const showForm = ref(false)
 </script>
 
-
 <template>
   <div class="p-4 sm:ml-64">
     <div class="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
@@ -56,7 +55,7 @@ const showForm = ref(false)
         </template>
         <template #body>
           <form class="form">
-            <div class="row mb-4  ">
+            <div class="row mb-4">
               <div id="preview" class="w-full text-center">
                 <input type="file" @change="onFileChange" />
                 <div class="cover">
@@ -65,35 +64,36 @@ const showForm = ref(false)
               </div>
             </div>
             <div class="form-item">
-              <input type="text" placeholder="Título" id="title" v-model="currentLivro.title" />
               <label for="title">Título</label>
+              <input type="text" placeholder="Título" id="title" v-model="currentLivro.title" />
+              
             </div>
             <div class="form-item">
-              <input
-                type="text"
-                placeholder="Ano de lançamento"
-                id="year"
-                v-model="currentLivro.year"
-              />
-              <label for="year">Ano de lançamento</label>
-            </div>
-            <div class="form-item">
+              <label for="year">Gênero</label>
               <select v-model="currentLivro.genre">
                 <option disabled value="">Selecione um gênero</option>
                 <option v-for="genre in genres" :key="genre.id" :value="genre.id">
                   {{ genre.name }}
                 </option>
               </select>
-              <label for="year">Gênero</label>
             </div>
             <div class="form-item">
-              <select v-model="currentLivro.rating">
-                <option disabled value="">Rating</option>
-                <option v-for="n in [0, 1, 2, 3, 4, 5]" :key="n" :value="n">
-                  {{ n }}
+              <label for="year">Gênero</label>
+              <select v-model="currentLivro.genre">
+                <option disabled value="">Selecione um gênero</option>
+                <option v-for="genre in genres" :key="genre.id" :value="genre.id">
+                  {{ genre.name }}
                 </option>
               </select>
-              <label for="year">Rating</label>
+            </div>
+            <div class="form-item">
+              <label for="year">Gênero</label>
+              <select v-model="currentLivro.genre">
+                <option disabled value="">Selecione um gênero</option>
+                <option v-for="genre in genres" :key="genre.id" :value="genre.id">
+                  {{ genre.name }}
+                </option>
+              </select>
             </div>
           </form>
         </template>
@@ -108,11 +108,9 @@ const showForm = ref(false)
   </div>
 </template>
 
-<style scoped
-lang="css"> 
+<style scoped lang="css">
 .addButton,
 .saveButton {
-
   height: 2rem;
   align-self: center;
   margin-left: 75%;
