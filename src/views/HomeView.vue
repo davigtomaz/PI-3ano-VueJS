@@ -1,19 +1,26 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import PlusBoxIcon from 'vue-material-design-icons/PlusBox.vue'
 
 import Card from '../components/Card.vue'
 import Modal from '../components/Modal.vue'
+
 import imageService from '../services/images.js'
 import livrosService from '../services/livros.js'
+import categoriaService from '../services/categorias.js'
+import localizacaoService from '../services/localizacao.js'
+import editoraService from '../services/editora.js'
+import autorService from '../services/autor.js'
 
+const categorias = ref([])
 const coverUrl = ref('')
 const file = ref(null)
 const currentLivro = reactive({
-  title: '',
-  year: '',
-  genre: '',
-  rating: 0
+  titulo: "",
+  categoria: '',
+  editora: null,
+  autores: [],
+  localizacao: null,
 })
 
 function onFileChange(e) {
@@ -26,15 +33,35 @@ async function save() {
   currentLivro.cover_attachment_key = image.attachment_key
   await livrosService.saveLivro(currentLivro)
   Object.assign(currentLivro, {
-    id: '',
-    title: '',
-    year: '',
-    genre: '',
-    rating: 0,
+    titulo: "",
+    categoria: '',
+    editora: null,
+    autores: [],
+    localizacao: null,
     cover_attachment_key: ''
   })
   showForm.value = false
 }
+
+onMounted(async () => {
+  const data = await categoriaService.getAllCategorias()
+  categorias.value = data
+})
+onMounted(async () => {
+  const data = await autorService.getAllAutores()
+  autores.value = data
+})
+
+onMounted(async () => {
+  const data = await categoriaService.getAllCategorias()
+  categorias.value = data
+})
+
+onMounted(async () => {
+  const data = await categoriaService.getAllCategorias()
+  categorias.value = data
+})
+
 
 const showForm = ref(false)
 </script>
@@ -63,38 +90,48 @@ const showForm = ref(false)
                 </div>
               </div>
             </div>
+            <label for="title">Título</label>
             <div class="form-item">
-              <label for="title">Título</label>
               <input type="text" placeholder="Título" id="title" v-model="currentLivro.title" />
               
             </div>
+            <label class="text-title" for="year">Categoria</label>
             <div class="form-item">
-              <label for="year">Gênero</label>
-              <select v-model="currentLivro.genre">
-                <option disabled value="">Selecione um gênero</option>
-                <option v-for="genre in genres" :key="genre.id" :value="genre.id">
-                  {{ genre.name }}
+              <select v-model="currentLivro.categoria">
+                <option disabled value="">Selecione uma categoria</option>
+                <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
+                  {{ categoria.nome }}
                 </option>
               </select>
             </div>
+            <label class="text-title" for="year">Autor</label>
             <div class="form-item">
-              <label for="year">Gênero</label>
-              <select v-model="currentLivro.genre">
-                <option disabled value="">Selecione um gênero</option>
-                <option v-for="genre in genres" :key="genre.id" :value="genre.id">
-                  {{ genre.name }}
+              <select v-model="currentLivro.categoria">
+                <option disabled value="">Selecione uma categoria</option>
+                <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
+                  {{ categoria.nome }}
                 </option>
               </select>
             </div>
+            <label class="text-title" for="year">Localização</label>
             <div class="form-item">
-              <label for="year">Gênero</label>
-              <select v-model="currentLivro.genre">
-                <option disabled value="">Selecione um gênero</option>
-                <option v-for="genre in genres" :key="genre.id" :value="genre.id">
-                  {{ genre.name }}
+              <select v-model="currentLivro.categoria">
+                <option disabled value="">Selecione uma categoria</option>
+                <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
+                  {{ categoria.nome }}
                 </option>
               </select>
             </div>
+            <label class="text-title" for="year">Editora</label>
+            <div class="form-item">
+              <select v-model="currentLivro.categoria">
+                <option disabled value="">Selecione uma categoria</option>
+                <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
+                  {{ categoria.nome }}
+                </option>
+              </select>
+            </div>
+            
           </form>
         </template>
         <template #footer>
@@ -119,12 +156,15 @@ const showForm = ref(false)
   justify-content: space-around;
 }
 
+
 .footerButtons {
   display: flex;
   padding: 75 px;
 }
 
 .form {
+  flex: 1;
+  align-items: center;
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;

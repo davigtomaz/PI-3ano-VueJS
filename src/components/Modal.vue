@@ -31,7 +31,7 @@ defineProps({
 .modal-mask {
   position: fixed;
   z-index: 9998;
-  top: 0;
+  top: 0  ;
   left: 0;
   width: 100%;
   height: 100%;
@@ -42,7 +42,7 @@ defineProps({
 
 .modal-container {
   width: 30%;
-  height: 80%;
+  height: 90%;
   margin: auto;
   padding: 20px 30px;
   background-color: #fff;
