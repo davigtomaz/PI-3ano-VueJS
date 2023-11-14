@@ -13,11 +13,14 @@ import editoraService from '../services/editora.js'
 import autorService from '../services/autor.js'
 
 const categorias = ref([])
+const autores = ref([])
+const editoras = ref([])
+const localizacoes = ref([])
 const coverUrl = ref('')
 const file = ref(null)
 const currentLivro = reactive({
   titulo: "",
-  categoria: '',
+  categoria: [],
   editora: null,
   autores: [],
   localizacao: null,
@@ -34,11 +37,11 @@ async function save() {
   await livrosService.saveLivro(currentLivro)
   Object.assign(currentLivro, {
     titulo: "",
-    categoria: '',
+    categoria: [],
     editora: null,
     autores: [],
     localizacao: null,
-    cover_attachment_key: ''
+    cover_attachment_key: null
   })
   showForm.value = false
 }
@@ -53,13 +56,13 @@ onMounted(async () => {
 })
 
 onMounted(async () => {
-  const data = await categoriaService.getAllCategorias()
-  categorias.value = data
+  const data = await localizacaoService.getAllLocalizacao()
+  localizacoes.value = data
 })
 
 onMounted(async () => {
-  const data = await categoriaService.getAllCategorias()
-  categorias.value = data
+  const data = await editoraService.getAllEditoras()
+  editoras.value = data
 })
 
 
@@ -106,28 +109,28 @@ const showForm = ref(false)
             </div>
             <label class="text-title" for="year">Autor</label>
             <div class="form-item">
-              <select v-model="currentLivro.categoria">
-                <option disabled value="">Selecione uma categoria</option>
-                <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
-                  {{ categoria.nome }}
+              <select v-model="currentLivro.autor">
+                <option disabled value="">Selecione o Autor</option>
+                <option v-for="autor in autores" :key="autor.id" :value="autor.id">
+                  {{ autor.nome }}
                 </option>
               </select>
             </div>
             <label class="text-title" for="year">Localização</label>
             <div class="form-item">
-              <select v-model="currentLivro.categoria">
-                <option disabled value="">Selecione uma categoria</option>
-                <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
-                  {{ categoria.nome }}
+              <select v-model="currentLivro.localizacao">
+                <option disabled value="">Selecione uma Localizacao</option>
+                <option v-for="localizacao in localizacoes" :key="localizacao.id" :value="localizacao.id">
+                  {{ localizacao.nome }}
                 </option>
               </select>
             </div>
             <label class="text-title" for="year">Editora</label>
             <div class="form-item">
-              <select v-model="currentLivro.categoria">
-                <option disabled value="">Selecione uma categoria</option>
-                <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
-                  {{ categoria.nome }}
+              <select v-model="currentLivro.editora">
+                <option disabled value="">Selecione uma Editora</option>
+                <option v-for="editora in editoras" :key="editora.id" :value="editora.id">
+                  {{ editora.nome }}
                 </option>
               </select>
             </div>
@@ -149,6 +152,7 @@ const showForm = ref(false)
 .addButton,
 .saveButton {
   height: 2rem;
+  width: 4rem;
   align-self: center;
   margin-left: 75%;
   background-color: #080;
@@ -159,7 +163,7 @@ const showForm = ref(false)
 
 .footerButtons {
   display: flex;
-  padding: 75 px;
+  padding: 0.75rem;
 }
 
 .form {
@@ -168,7 +172,7 @@ const showForm = ref(false)
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
-  row-gap: 0.5rem;
+ 
 }
 
 #preview {
