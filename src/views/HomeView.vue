@@ -16,7 +16,7 @@ const categorias = ref([])
 const autores = ref([])
 const editoras = ref([])
 const localizacoes = ref([])
-const coverUrl = ref('')
+const capaUrl = ref('')
 const file = ref(null)
 const currentLivro = reactive({
   titulo: "",
@@ -28,24 +28,29 @@ const currentLivro = reactive({
 
 function onFileChange(e) {
   file.value = e.target.files[0]
-  coverUrl.value = URL.createObjectURL(file.value)
+  capaUrl.value = URL.createObjectURL(file.value)
 }
 
 async function save() {
-  const image = await imageService.uploadImage(file.value)
-  currentLivro.cover_attachment_key = image.attachment_key
-  await livrosService.saveLivro(currentLivro)
+  const image = await imageService.uploadImage(file.value);
+  currentLivro.capa_attachment_key = image.attachment_key;
+
+  const autoresPks = currentLivro.autores.map((autor) => autor.id);
+  currentLivro.autores = autoresPks;
+
+  await livrosService.saveLivro(currentLivro);
+
   Object.assign(currentLivro, {
     titulo: "",
     categoria: [],
     editora: null,
     autores: [],
     localizacao: null,
-    cover_attachment_key: null
-  })
-  showForm.value = false
-}
+    capa_attachment_key: null,
+  });
 
+  showForm.value = false;
+}
 onMounted(async () => {
   const data = await categoriaService.getAllCategorias()
   categorias.value = data
@@ -88,14 +93,14 @@ const showForm = ref(false)
             <div class="row mb-4">
               <div id="preview" class="w-full text-center">
                 <input type="file" @change="onFileChange" />
-                <div class="cover">
-                  <img v-if="coverUrl" :src="coverUrl" />
+                <div class="capa">
+                  <img v-if="capaUrl" :src="capaUrl" />
                 </div>
               </div>
             </div>
-            <label for="title">Título</label>
+            <label for="titulo">Título</label>
             <div class="form-item">
-              <input type="text" placeholder="Título" id="title" v-model="currentLivro.title" />
+              <input type="text" placeholder="Título" id="titulo" v-model="currentLivro.titulo" />
               
             </div>
             <label class="text-title" for="year">Categoria</label>
@@ -118,7 +123,7 @@ const showForm = ref(false)
             </div>
             <label class="text-title" for="year">Localização</label>
             <div class="form-item">
-              <select v-model="currentLivro.localizacao">
+              <select v-model="currentLivro.localizacao"> 
                 <option disabled value="">Selecione uma Localizacao</option>
                 <option v-for="localizacao in localizacoes" :key="localizacao.id" :value="localizacao.id">
                   {{ localizacao.nome }}
@@ -182,7 +187,7 @@ const showForm = ref(false)
   align-items: center;
 }
 
-#preview .cover {
+#preview .capa {
   width: 200px;
   height: 270px;
   background-color: lightgray;

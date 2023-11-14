@@ -1,22 +1,27 @@
 import api from '../plugins/api'
 
 class LivroService {
-  async getAllLivro() {
+  async getAllLivros() {
     const response = await api.get('/livros/')
     return response.data
   }
-  async saveLivro(livro) {
-    let response
-    if (livro.id) {
-      response = await api.put(`/livors/${livro.id}/`, livro)
-    } else {
-      response = await api.post('/livros/', livro)
-    }
+  async saveLivro(Livro) {
+    Livro.categoria = [Livro.categoria]
+    Livro.autores = [Livro.autores]
+
+    console.log(Livro)
+    const response = await api.post('/livros/', Livro)
     return response.data
   }
-  async deleteLivro(livro) {
-    const response = await api.delete(`/livros/${livro.id}/`)
-    return response.data
+  async deleteLivro(Livro) {
+    try {
+      console.log("ID do Livro a ser deletado:", Livro.id);
+      const response = await api.delete(`/livros/${Livro.id}/`);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao excluir livro:", error);
+      throw error;
+    }
   }
 }
 
