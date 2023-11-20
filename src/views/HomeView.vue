@@ -31,12 +31,12 @@ function onFileChange(e) {
   capaUrl.value = URL.createObjectURL(file.value)
 }
 
+console.log(currentLivro)
+
 async function save() {
   const image = await imageService.uploadImage(file.value);
   currentLivro.capa_attachment_key = image.attachment_key;
 
-  const autoresPks = currentLivro.autores.map((autor) => autor.id);
-  currentLivro.autores = autoresPks;
 
   await livrosService.saveLivro(currentLivro);
 
@@ -50,6 +50,7 @@ async function save() {
   });
 
   showForm.value = false;
+  location.reload();
 }
 onMounted(async () => {
   const data = await categoriaService.getAllCategorias()
@@ -114,7 +115,7 @@ const showForm = ref(false)
             </div>
             <label class="text-title" for="year">Autor</label>
             <div class="form-item">
-              <select v-model="currentLivro.autor">
+              <select v-model="currentLivro.autores">
                 <option disabled value="">Selecione o Autor</option>
                 <option v-for="autor in autores" :key="autor.id" :value="autor.id">
                   {{ autor.nome }}
