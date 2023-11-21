@@ -2,10 +2,22 @@
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 
+import BottonT from './BottonT.vue';
 import Loading from '../components/Loading.vue'
 
 const livros = ref([])
 const loading = ref(true)
+
+const handleDelete = async (livro) => {
+  try {
+    
+    await axios.delete(`https://daarii.4.us-1.fl0.io/livros/${livro.id}`);
+    
+    livros.value = livros.value.filter((item) => item.id !== livro.id);
+  } catch (error) {
+    console.error('Erro ao excluir o livro:', error);
+  }
+};
 
 const buscarLivros = async () => {
   try {
@@ -40,10 +52,9 @@ onMounted(() => {
         <p>Autor(s): {{ livro.autores.join(',') }}</p>
         <p>Localização: {{ livro.localizacao }}</p>
         <p>Editora: {{ livro.editora }}</p>
-        <button class="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg">
-          rr
-        </button>
-        
+        <div class="buttonT">
+        <BottonT @click="handleDelete"/>
+      </div>
       </div>
     </div>
   </div>
@@ -65,6 +76,12 @@ onMounted(() => {
   flex-wrap: wrap;
   gap: 110px 50px;
   padding: 50px 50px;
+}
+.buttonT {
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+  
 }
 .loading1 {
   position: relative;
@@ -89,7 +106,7 @@ onMounted(() => {
 }
 
 .container .card:hover {
-  height: 400px;
+  height: 440px;
   cursor: pointer;
 }
 
@@ -110,8 +127,8 @@ onMounted(() => {
 .container .card:hover .img-box {
   top: -100px;
   scale: 0.75;
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
 }
+
 
 .container .card .img-box img {
   position: absolute;
@@ -122,11 +139,13 @@ onMounted(() => {
   object-fit: cover;
 }
 
+
+
 .container .card .content .title-background {
   background-color: white;
   padding: 10px;
   border-radius: 10px;
-  margin-bottom: 10px;
+ 
   position: relative;
   z-index: 1;
 }
@@ -164,7 +183,7 @@ onMounted(() => {
 
 @media (max-width: 480px) {
   .container .card {
-    width: 240px;
+    width: 260px;
     border-radius: 15px;
   }
 
@@ -180,23 +199,7 @@ onMounted(() => {
   .container .card .content a {
     font-size: 0.9rem;
   }
-  .button {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: rgb(20, 20, 20);
-  border: none;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
-  cursor: pointer;
-  transition-duration: .3s;
-  overflow: hidden;
-  position: relative;
-}
-
+ 
 .svgIcon {
   width: 12px;
   transition-duration: .3s;
@@ -206,34 +209,9 @@ onMounted(() => {
   fill: white;
 }
 
-.button:hover {
-  width: 140px;
-  border-radius: 50px;
-  transition-duration: .3s;
-  background-color: rgb(255, 69, 69);
-  align-items: center;
-}
 
-.button:hover .svgIcon {
-  width: 50px;
-  transition-duration: .3s;
-  transform: translateY(60%);
-}
 
-.button::before {
-  position: absolute;
-  top: -20px;
-  content: "Delete";
-  color: white;
-  transition-duration: .3s;
-  font-size: 2px;
-}
 
-.button:hover::before {
-  font-size: 13px;
-  opacity: 1;
-  transform: translateY(30px);
-  transition-duration: .3s;
-}
+
 }
 </style>

@@ -31,7 +31,6 @@ function onFileChange(e) {
   capaUrl.value = URL.createObjectURL(file.value)
 }
 
-console.log(currentLivro)
 
 async function save() {
   const image = await imageService.uploadImage(file.value);
