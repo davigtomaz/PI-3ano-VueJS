@@ -1,38 +1,36 @@
 <script setup>
-import axios from 'axios'
-import { ref, onMounted } from 'vue'
+import axios from "axios";
+import { ref, onMounted } from "vue";
 
-import BottonT from './BottonT.vue';
-import Loading from '../components/Loading.vue'
+import BottonT from "./BottonT.vue";
+import Loading from "../components/Loading.vue";
 
-const livros = ref([])
-const loading = ref(true)
+import livroService from "../services/livros";
 
-const handleDelete = async (livro) => {
+const livros = ref([]);
+const loading = ref(true);
+
+const handleDeleteLivro = async (livro) => {
   try {
-    
-    await axios.delete(`https://daarii.4.us-1.fl0.io/livros/${livro.id}`);
-    
-    livros.value = livros.value.filter((item) => item.id !== livro.id);
+    await livroService.deleteLivro(livro);
   } catch (error) {
-    console.error('Erro ao excluir o livro:', error);
+    console.error("Erro ao excluir livro:", error);
+  }
+};
+const buscarLivros = async () => {
+  try {
+    const resposta = await axios.get("https://daarii.4.us-1.fl0.io/livros");
+    livros.value = resposta.data;
+  } catch (erro) {
+    console.error(erro);
+  } finally {
+    loading.value = false;
   }
 };
 
-const buscarLivros = async () => {
-  try {
-    const resposta = await axios.get('https://daarii.4.us-1.fl0.io/livros')
-    livros.value = resposta.data
-  } catch (erro) {
-    console.error(erro)
-  } finally {
-    loading.value = false
-  }
-}
-
 onMounted(() => {
-  buscarLivros()
-})
+  buscarLivros();
+});
 </script>
 
 <template>
@@ -40,7 +38,12 @@ onMounted(() => {
     <Loading v-if="loading" />
   </div>
   <div class="container">
-    <div class="card" :style="{ '--clr': cardColor }" v-for="(livro, index) in livros" :key="index">
+    <div
+      class="card"
+      :style="{ '--clr': cardColor }"
+      v-for="(livro, index) in livros"
+      :key="index"
+    >
       <div class="img-box">
         <img :src="livro.capa" alt="Imagem" />
       </div>
@@ -48,26 +51,26 @@ onMounted(() => {
         <div class="title-background">
           <h2>{{ livro.titulo }}</h2>
         </div>
-        <p>Categoria: {{ livro.categoria.join(',') }}</p>
-        <p>Autor(s): {{ livro.autores.join(',') }}</p>
+        <p>Categoria: {{ livro.categoria.join(",") }}</p>
+        <p>Autor(s): {{ livro.autores.join(",") }}</p>
         <p>Localização: {{ livro.localizacao }}</p>
         <p>Editora: {{ livro.editora }}</p>
         <div class="buttonT">
-        <BottonT @click="handleDelete"/>
-      </div>
+          <BottonT @click="handleDeleteLivro(livro)" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="css">
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .container {
@@ -75,13 +78,12 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 110px 50px;
-  padding: 50px 50px;
+  padding: 50px 150px;
 }
 .buttonT {
   display: flex;
   justify-content: center;
   padding-top: 10px;
-  
 }
 .loading1 {
   position: relative;
@@ -129,7 +131,6 @@ onMounted(() => {
   scale: 0.75;
 }
 
-
 .container .card .img-box img {
   position: absolute;
   top: 0;
@@ -139,13 +140,11 @@ onMounted(() => {
   object-fit: cover;
 }
 
-
-
 .container .card .content .title-background {
   background-color: white;
   padding: 10px;
   border-radius: 10px;
- 
+
   position: relative;
   z-index: 1;
 }
@@ -199,19 +198,14 @@ onMounted(() => {
   .container .card .content a {
     font-size: 0.9rem;
   }
- 
-.svgIcon {
-  width: 12px;
-  transition-duration: .3s;
-}
 
-.svgIcon path {
-  fill: white;
-}
+  .svgIcon {
+    width: 12px;
+    transition-duration: 0.3s;
+  }
 
-
-
-
-
+  .svgIcon path {
+    fill: white;
+  }
 }
 </style>

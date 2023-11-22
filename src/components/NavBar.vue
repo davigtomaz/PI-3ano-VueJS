@@ -29,7 +29,7 @@
               ></path>
             </svg>
           </button>
-          <RouterLink to="/" class="flex  ml-5 md:mr-24">
+          <RouterLink to="/" class="flex ml-5 md:mr-24">
             <svg
               class="w-6 h-6 mr-3 mt-1 text-gray-800 dark:text-white"
               aria-hidden="true"
@@ -186,7 +186,6 @@
             <span class="flex-1 ml-3 whitespace-nowrap">Pesquisar</span>
           </RouterLink>
         </li>
-        
       </ul>
     </div>
   </aside>
