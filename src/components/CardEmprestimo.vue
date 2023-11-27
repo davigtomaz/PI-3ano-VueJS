@@ -5,23 +5,23 @@ import { ref, onMounted } from "vue";
 import BottonT from "./BottonT.vue";
 import Loading from "../components/Loading.vue";
 
-import livroService from "../services/livros";
+import emprestimoService from "../services/emprestimos";
 
-const livros = ref([]);
+const emprestimos = ref([]);
 const loading = ref(true);
 
-const handleDeleteLivro = async (livro) => {
+const handleDeleteEmprestimo = async (emprestimo) => {
   try {
-    await livroService.deleteLivro(livro);
+    await emprestimoService.deleteEmprestimo(emprestimo);
   } catch (error) {
-    console.error("Erro ao excluir livro:", error);
+    console.error("Erro ao excluir emprestimo:", error);
   }
   location.reload();
 };
-const buscarLivros = async () => {
+const buscarEmprestimos = async () => {
   try {
-    const resposta = await axios.get("https://daarii.4.us-1.fl0.io/livros");
-    livros.value = resposta.data;
+    const resposta = await axios.get("http://0.0.0.0:19003/emprestimos/");
+    emprestimos.value = resposta.data;
   } catch (erro) {
     console.error(erro);
   } finally {
@@ -30,7 +30,7 @@ const buscarLivros = async () => {
 };
 
 onMounted(() => {
-  buscarLivros();
+  buscarEmprestimos();
 });
 </script>
 
@@ -42,22 +42,22 @@ onMounted(() => {
     <div
       class="card"
       :style="{ '--clr': cardColor }"
-      v-for="(livro, index) in livros"
+      v-for="(emprestimo, index) in emprestimos"
       :key="index"
     >
       <div class="img-box">
-        <img :src="livro.capa" alt="Imagem" />
+        <img :src="emprestimo.nome_livro.capa.file" alt="Imagem" />
       </div>
       <div class="content">
         <div class="title-background">
-          <h2>{{ livro.titulo }}</h2>
+          <h2>{{ emprestimo.nome_livro.titulo }}</h2>
         </div>
-        <p>Categoria: {{ livro.categoria.join(",") }}</p>
-        <p>Autor(s): {{ livro.autores.join(",") }}</p>
-        <p>Localização: {{ livro.localizacao }}</p>
-        <p>Editora: {{ livro.editora }}</p>
+        <p>Emprestado Para: {{ emprestimo.nome }}</p>
+        <p>Contato: {{ emprestimo.contato }}</p>
+        <p>Inicio do Empréstimo: {{ emprestimo.inicio }}</p>
+        <p>Fim do Empréstimo: {{ emprestimo.final}}</p>
         <div class="buttonT">
-          <BottonT @click="handleDeleteLivro(livro)" />
+          <BottonT @click="handleDeleteEmprestimo(emprestimo)" />
         </div>
       </div>
     </div>
