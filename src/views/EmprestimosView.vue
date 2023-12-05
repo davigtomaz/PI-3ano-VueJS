@@ -9,25 +9,25 @@ import emprestimosService from '../services/emprestimos.js'
 import livrosService from '../services/livros.js'
 import livros from '../services/livros.js'
 
-
+const livros2= ref([])
 
 const currentEmprestimo = reactive({
   nome: '',
   contato: '',
-  inicio: '',
-  final: '',
+  inicio: null,
+  final: null,
   nome_livro: null
 })
 
 async function save() {
-  
-  await emprestimosService.saveEmprestimo(currentEmprestimo)
-
+  console.log("entrol")
+ const teste = await emprestimosService.saveEmprestimo(currentEmprestimo)
+console.log(teste)
   Object.assign(currentEmprestimo, {
     nome: '',
     contato: '',
-    inicio: '',
-    final: '',
+    inicio: null,
+    final: null,
     nome_livro: null
   })
 
@@ -39,7 +39,7 @@ const showForm = ref(false)
 
 onMounted(async () => {
   const data = await livrosService.getAllLivros()
-  livros.value = data
+  livros2.value = data
   console.log('Livros:', livros.value)
 })
 </script>
@@ -111,13 +111,13 @@ onMounted(async () => {
               
               <label class="text-title" for="year">Livro Para emprestar</label>
               <div class="form-item ">
-                <select v-model="currentEmprestimo.nome_livro" class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+                <select v-model="currentEmprestimo.nome_livro"  class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
                   <option disabled value="">Selecione o Livro</option>
                   <option
                    class=""
-                    v-for="livro in livros"
+                    v-for="livro in livros2"
                     :key="livro.id"
-                    :value="livro.id"
+                    
                   >
                   {{ livro.titulo }}
                   </option>
