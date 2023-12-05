@@ -6,9 +6,11 @@ import CardEmprestimo from '../components/CardEmprestimo.vue'
 import Modal from '../components/Modal.vue'
 
 import emprestimosService from '../services/emprestimos.js'
+import livrosService from '../services/livros.js'
+import livros from '../services/livros.js'
 
-const capaUrl = ref('')
-const file = ref(null)
+
+
 const currentEmprestimo = reactive({
   nome: '',
   contato: '',
@@ -17,16 +19,9 @@ const currentEmprestimo = reactive({
   nome_livro: null
 })
 
-function onFileChange(e) {
-  file.value = e.target.files[0]
-  capaUrl.value = URL.createObjectURL(file.value)
-}
-
 async function save() {
-  const image = await emprestimosService.uploadImage(file.value)
-  currentEmprestimo.capa_attachment_key = image.attachment_key
-
-  await emprestimosService.saveLivro(currentEmprestimo)
+  
+  await emprestimosService.saveEmprestimo(currentEmprestimo)
 
   Object.assign(currentEmprestimo, {
     nome: '',
@@ -40,8 +35,13 @@ async function save() {
   location.reload()
 }
 
-
 const showForm = ref(false)
+
+onMounted(async () => {
+  const data = await livrosService.getAllLivros()
+  livros.value = data
+  console.log('Livros:', livros.value)
+})
 </script>
 
 <template>
@@ -50,67 +50,79 @@ const showForm = ref(false)
       <div class="flex justify-start mb-4">
         <button class="btn btn-wide" @click="showForm = true">
           <PlusBoxIcon />
-          Registrar Livro
+          Registrar Empréstimo
         </button>
       </div>
       <CardEmprestimo />
+      
       <modal :visible="showForm" @close="showForm = false">
         <template #header>
-          <h3>Cadastro de Livros</h3>
+          <h3>Registro de Empréstimos</h3>
         </template>
         <template #body>
           <form class="form">
             <div class="row mb-4">
-              <div id="preview" class="w-full text-center">
-                <input type="file" @change="onFileChange" />
-                <div class="capa">
-                  <img v-if="capaUrl" :src="capaUrl" />
+              <label for="titulo">Nome</label>
+              <div class="form-item">
+                <input  class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" type="text" placeholder="Nome" id="nome" v-model="currentEmprestimo.nome" />
+              </div>
+              <label class="text-title" for="year">Contato</label>
+              <div class="form-item ">
+                <input
+                  class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                  type="text"
+                  placeholder="contato"
+                  id="contato"
+                  v-model="currentEmprestimo.contato"
+                />
+              </div>
+              <div class="w-full px-3">
+                <div class="-mx-3 flex flex-wrap">
+                  <div class="w-full px-3">
+                    <div class="mb-5">
+                      <label class="text-title" for="year">Inicio</label>
+                      <input
+                        v-model="currentEmprestimo.inicio"
+                        type="date"
+                        name="date"
+                        id="date"
+                        class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <label for="titulo">Título</label>
-            <div class="form-item">
-              <input type="text" placeholder="Título" id="titulo" v-model="currentLivro.titulo" />
-            </div>
-            <label class="text-title" for="year">Categoria</label>
-            <div class="form-item">
-              <select v-model="currentLivro.categoria">
-                <option disabled value="">Selecione uma categoria</option>
-                <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
-                  {{ categoria.nome }}
-                </option>
-              </select>
-            </div>
-            <label class="text-title" for="year">Autor</label>
-            <div class="form-item">
-              <select v-model="currentLivro.autores">
-                <option disabled value="">Selecione o Autor</option>
-                <option v-for="autor in autores" :key="autor.id" :value="autor.id">
-                  {{ autor.nome }}
-                </option>
-              </select>
-            </div>
-            <label class="text-title" for="year">Localização</label>
-            <div class="form-item">
-              <select v-model="currentLivro.localizacao">
-                <option disabled value="">Selecione uma Localizacao</option>
-                <option
-                  v-for="localizacao in localizacoes"
-                  :key="localizacao.id"
-                  :value="localizacao.id"
-                >
-                  {{ localizacao.nome }}
-                </option>
-              </select>
-            </div>
-            <label class="text-title" for="year">Editora</label>
-            <div class="form-item">
-              <select v-model="currentLivro.editora">
-                <option disabled value="">Selecione uma Editora</option>
-                <option v-for="editora in editoras" :key="editora.id" :value="editora.id">
-                  {{ editora.nome }}
-                </option>
-              </select>
+              <div class="w-full px-3">
+                <div class="-mx-3 flex flex-wrap">
+                  <div class="w-full px-3">
+                    <div class="mb-5">
+                      <label class="text-title" for="year">Final</label>
+                      <input
+                        v-model="currentEmprestimo.final"
+                        type="date"
+                        name="date"
+                        id="date"
+                        class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <label class="text-title" for="year">Livro Para emprestar</label>
+              <div class="form-item ">
+                <select v-model="currentEmprestimo.nome_livro" class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+                  <option disabled value="">Selecione o Livro</option>
+                  <option
+                   class=""
+                    v-for="livro in livros"
+                    :key="livro.id"
+                    :value="livro.id"
+                  >
+                  {{ livro.titulo }}
+                  </option>
+                </select>
+              </div>
             </div>
           </form>
         </template>
@@ -126,6 +138,11 @@ const showForm = ref(false)
 </template>
 
 <style scoped lang="css">
+.modal {
+  flex: 1;
+  justify-content: center;
+}
+
 .addButton,
 .saveButton {
   height: 2rem;
@@ -145,6 +162,7 @@ const showForm = ref(false)
 .form {
   flex: 1;
   align-items: center;
+  justify-content: center;
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
@@ -155,19 +173,5 @@ const showForm = ref(false)
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-#preview .capa {
-  width: 200px;
-  height: 270px;
-  background-color: lightgray;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#preview img {
-  width: 200px;
-  height: 270px;
 }
 </style>
