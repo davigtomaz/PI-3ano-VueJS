@@ -20,7 +20,7 @@ const handleDeleteEmprestimo = async (emprestimo) => {
 };
 const buscarEmprestimos = async () => {
   try {
-    const resposta = await axios.get("http://0.0.0.0:19003/emprestimos/");
+    const resposta = await axios.get("https://daarii.4.us-1.fl0.io/emprestimos");
     emprestimos.value = resposta.data;
   } catch (erro) {
     console.error(erro);

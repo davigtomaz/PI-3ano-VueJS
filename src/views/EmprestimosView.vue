@@ -5,17 +5,16 @@ import PlusBoxIcon from 'vue-material-design-icons/PlusBox.vue'
 import CardEmprestimo from '../components/CardEmprestimo.vue'
 import Modal from '../components/Modal.vue'
 
-import emprestimos from '../services/emprestimos'
-
+import emprestimosService from '../services/emprestimos.js'
 
 const capaUrl = ref('')
 const file = ref(null)
 const currentEmprestimo = reactive({
-  Nome: '',
-  : [],
-  editora: null,
-  autores: [],
-  localizacao: null
+  nome: '',
+  contato: '',
+  inicio: '',
+  final: '',
+  nome_livro: null
 })
 
 function onFileChange(e) {
@@ -24,41 +23,23 @@ function onFileChange(e) {
 }
 
 async function save() {
-  const image = await imageService.uploadImage(file.value)
-  currentLivro.capa_attachment_key = image.attachment_key
+  const image = await emprestimosService.uploadImage(file.value)
+  currentEmprestimo.capa_attachment_key = image.attachment_key
 
-  await livrosService.saveLivro(currentLivro)
+  await emprestimosService.saveLivro(currentEmprestimo)
 
-  Object.assign(currentLivro, {
-    titulo: '',
-    categoria: [],
-    editora: null,
-    autores: [],
-    localizacao: null,
-    capa_attachment_key: null
+  Object.assign(currentEmprestimo, {
+    nome: '',
+    contato: '',
+    inicio: '',
+    final: '',
+    nome_livro: null
   })
 
   showForm.value = false
   location.reload()
 }
-onMounted(async () => {
-  const data = await categoriaService.getAllCategorias()
-  categorias.value = data
-})
-onMounted(async () => {
-  const data = await autorService.getAllAutores()
-  autores.value = data
-})
 
-onMounted(async () => {
-  const data = await localizacaoService.getAllLocalizacao()
-  localizacoes.value = data
-})
-
-onMounted(async () => {
-  const data = await editoraService.getAllEditoras()
-  editoras.value = data
-})
 
 const showForm = ref(false)
 </script>
