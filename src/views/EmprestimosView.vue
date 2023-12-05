@@ -117,7 +117,7 @@ onMounted(async () => {
                    class=""
                     v-for="livro in livros2"
                     :key="livro.id"
-                    
+                    :value="livro.id"
                   >
                   {{ livro.titulo }}
                   </option>
